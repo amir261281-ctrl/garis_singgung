@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Pembelajaran Matematika SMPN 1 Kandat - Pak Samiran, S.Pd.I.</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Three.js & OrbitControls CDN for 3D Visuals -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Custom Styles -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .tab-active { border-bottom: 3px solid #0d9488; color: #0d9488; font-weight: 700; }
+        .sidebar-active { background-color: #0d9488; color: #ffffff; font-weight: 600; }
+        canvas { touch-action: none; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 flex flex-col min-h-screen">
+
+    <!-- HEADER & BRANDING -->
+    <header class="bg-gradient-to-r from-slate-900 via-slate-800 to-teal-900 text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-2">
+            <div class="flex items-center gap-3">
+                <div class="bg-teal-500 p-2.5 rounded-xl shadow-md text-slate-900">
+                    <i data-lucide="shapes" class="w-7 h-7"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg md:text-xl font-extrabold tracking-tight">MEDIA PEMBELAJARAN GEOMETRI INTERAKTIF</h1>
+                    <p class="text-xs text-teal-300 font-medium">SMPN 1 Kandat • Kabupaten Kediri</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700">
+                <i data-lucide="user-check" class="w-4 h-4 text-amber-400"></i>
+                <span class="text-xs font-semibold text-slate-200">Guru Pengampu: <span class="text-amber-400">Samiran, S.Pd.I.</span></span>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN APP LAYOUT -->
+    <div class="flex-1 max-w-7xl w-full mx-auto flex flex-col md:flex-row gap-6 p-4 md:p-6">
+
+        <!-- SIDEBAR NAVIGATION (TOPICS) -->
+        <aside class="w-full md:w-72 bg-white rounded-2xl shadow-sm border border-slate-200 p-4 shrink-0 flex flex-col gap-2">
+            <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider px-3 mb-1">Topik Pembelajaran</h2>
+            <nav id="topic-menu" class="flex flex-col gap-1.5">
+                <!-- Injected via JavaScript -->
+            </nav>
+        </aside>
+
+        <!-- MAIN CONTENT AREA -->
+        <main class="flex-1 bg-white rounded-2xl shadow-sm border border-slate-200 p-4 md:p-6 flex flex-col">
+            
+            <!-- TOPIC HEADER -->
+            <div class="border-b border-slate-200 pb-4 mb-4 flex flex-col md:flex-row md:items-center justify-between gap-2">
+                <div>
+                    <span id="topic-badge" class="px-2.5 py-1 text-xs font-bold rounded-full bg-teal-100 text-teal-800 inline-block mb-1">Materi Geometri</span>
+                    <h2 id="topic-title" class="text-2xl font-bold text-slate-900">Judul Topik</h2>
+                </div>
+            </div>
+
+            <!-- TABS SUB-NAVIGASI -->
+            <div class="flex border-b border-slate-200 mb-6 overflow-x-auto">
+                <button onclick="switchTab('materi')" id="tab-materi" class="px-4 py-2.5 text-sm font-semibold text-slate-600 hover:text-teal-600 whitespace-nowrap flex items-center gap-2 tab-active">
+                    <i data-lucide="book-open" class="w-4 h-4"></i> Ringkasan & Rumus
+                </button>
+                <button onclick="switchTab('visual')" id="tab-visual" class="px-4 py-2.5 text-sm font-semibold text-slate-600 hover:text-teal-600 whitespace-nowrap flex items-center gap-2">
+                    <i data-lucide="box" class="w-4 h-4"></i> Visualisasi 2D/3D
+                </button>
+                <button onclick="switchTab('contoh')" id="tab-contoh" class="px-4 py-2.5 text-sm font-semibold text-slate-600 hover:text-teal-600 whitespace-nowrap flex items-center gap-2">
+                    <i data-lucide="file-text" class="w-4 h-4"></i> Contoh Soal (L1-L3)
+                </button>
+                <button onclick="switchTab('kuis')" id="tab-kuis" class="px-4 py-2.5 text-sm font-semibold text-slate-600 hover:text-teal-600 whitespace-nowrap flex items-center gap-2">
+                    <i data-lucide="award" class="w-4 h-4"></i> Kuis Interaktif
+                </button>
+            </div>
+
+            <!-- TAB CONTENT CONTAINER -->
+            <div class="flex-1">
+
+                <!-- 1. TAB RINGKASAN MATERI -->
+                <div id="content-materi" class="space-y-6">
+                    <!-- Dynamic Content Injected Here -->
+                </div>
+
+                <!-- 2. TAB VISUALISASI INTERAKTIF (2D / 3D) -->
+                <div id="content-visual" class="hidden space-y-6">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Canvas Viewport -->
+                        <div class="lg:col-span-2 bg-slate-900 rounded-2xl p-4 relative min-h-[360px] flex items-center justify-center overflow-hidden border border-slate-700">
+                            <div id="canvas-container" class="w-full h-full flex items-center justify-center">
+                                <canvas id="vizCanvas" class="max-w-full rounded-lg"></canvas>
+                            </div>
+                            <div class="absolute bottom-3 right-3 bg-slate-800/80 backdrop-blur px-3 py-1.5 rounded-lg text-xs text-slate-300 border border-slate-700 flex items-center gap-2">
+                                <i data-lucide="move-3d" class="w-4 h-4 text-teal-400"></i>
+                                <span id="viz-hint">Gunakan slider untuk mengubah ukuran</span>
+                            </div>
+                        </div>
+
+                        <!-- Controls & Dynamic Stats -->
+                        <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 flex flex-col justify-between">
+                            <div>
+                                <h3 class="font-bold text-slate-900 text-lg mb-4 flex items-center gap-2">
+                                    <i data-lucide="sliders" class="w-5 h-5 text-teal-600"></i> Kontrol Parameter
+                                </h3>
+                                <div id="slider-controls" class="space-y-4">
+                                    <!-- Dynamic Controls -->
+                                </div>
+                            </div>
+                            <div class="mt-6 p-4 bg-teal-50 rounded-xl border border-teal-200">
+                                <h4 class="font-bold text-teal-900 text-xs uppercase tracking-wider mb-2">Hasil Perhitungan Real-Time:</h4>
+                                <div id="live-calc-results" class="space-y-1.5 text-sm font-semibold text-teal-950">
+                                    <!-- Dynamic Live Calculations -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. TAB CONTOH SOAL & PEMBAHASAN -->
+                <div id="content-contoh" class="hidden space-y-6">
+                    <div class="flex gap-2 mb-4">
+                        <button onclick="filterExamples('all')" class="ex-filter-btn px-3 py-1.5 text-xs font-bold rounded-lg bg-teal-600 text-white">Semua Level</button>
+                        <button onclick="filterExamples(1)" class="ex-filter-btn px-3 py-1.5 text-xs font-bold rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200">Level 1 (Dasar)</button>
+                        <button onclick="filterExamples(2)" class="ex-filter-btn px-3 py-1.5 text-xs font-bold rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200">Level 2 (Sedang)</button>
+                        <button onclick="filterExamples(3)" class="ex-filter-btn px-3 py-1.5 text-xs font-bold rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200">Level 3 (HOTS)</button>
+                    </div>
+                    <div id="examples-list" class="space-y-4">
+                        <!-- Dynamic Examples -->
+                    </div>
+                </div>
+
+                <!-- 4. TAB KUIS INTERAKTIF -->
+                <div id="content-kuis" class="hidden space-y-6">
+                    <!-- Difficulty Selection -->
+                    <div class="flex flex-col sm:flex-row items-center justify-between p-4 bg-slate-100 rounded-xl border border-slate-200 gap-4">
+                        <div class="flex items-center gap-2">
+                            <i data-lucide="target" class="w-5 h-5 text-teal-600"></i>
+                            <span class="font-bold text-slate-700 text-sm">Pilih Tingkat Kesulitan Kuis:</span>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="loadQuizLevel(1)" id="quiz-lvl-1" class="quiz-lvl-btn px-3 py-1.5 text-xs font-bold rounded-lg bg-teal-600 text-white">Level 1 (Dasar)</button>
+                            <button onclick="loadQuizLevel(2)" id="quiz-lvl-2" class="quiz-lvl-btn px-3 py-1.5 text-xs font-bold rounded-lg bg-slate-200 text-slate-700">Level 2 (Sedang)</button>
+                            <button onclick="loadQuizLevel(3)" id="quiz-lvl-3" class="quiz-lvl-btn px-3 py-1.5 text-xs font-bold rounded-lg bg-slate-200 text-slate-700">Level 3 (HOTS)</button>
+                        </div>
+                    </div>
+
+                    <!-- Quiz Container -->
+                    <div id="quiz-container" class="space-y-6">
+                        <!-- Dynamic Quiz Content -->
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-slate-400 py-4 text-center text-xs mt-auto border-t border-slate-800">
+        <p>© 2026 Media Pembelajaran Matematika SMPN 1 Kandat • Dirancang untuk Kemudahan Belajar Siswa</p>
+    </footer>
+
+    <!-- SCRIPT DATA & LOGIKA APLIKASI -->
+    <script>
+        // DATA APLIKASI UNTUK 6 TOPIK GEOMETRI
+        const topicsData = [
+            {
+                id: 'gsl',
+                title: 'Garis Singgung Lingkaran',
+                badge: 'Garis Singgung (2D)',
+                summary: `
+                    <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-xl mb-4">
+                        <h4 class="font-bold text-amber-900 mb-1">Konsep Dasar</h4>
+                        <p class="text-sm text-amber-800">Garis singgung lingkaran adalah garis yang memotong lingkaran tepat di <strong>satu titik</strong> (titik singgung). Garis singgung selalu <strong>tegak lurus ($90^\circ$)</strong> terhadap jari-jari yang melalui titik singgung tersebut.</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                            <h4 class="font-bold text-slate-900 mb-2 text-sm border-b pb-1">Sifat Utama Garis Singgung:</h4>
+                            <ul class="list-disc list-inside text-sm text-slate-600 space-y-1">
+                                <li>Tegak lurus terhadap jari-jari di titik singgung.</li>
+                                <li>Dari satu titik luar lingkaran, dapat dibuat <strong>2 garis singgung</strong> yang sama panjang.</li>
+                                <li>Membentuk segitiga siku-siku dengan jari-jari dan jarak titik ke pusat.</li>
+                            </ul>
+                        </div>
+                        <div class="bg-teal-900 text-white p-4 rounded-xl shadow-sm">
+                            <h4 class="font-bold text-teal-300 mb-2 text-sm border-b border-teal-700 pb-1">Rumus Utama (Pythagoras):</h4>
+                            <div class="text-center py-2 text-lg font-mono font-bold text-amber-300">
+                                d = √(p² - r²)
+                            </div>
+                            <p class="text-xs text-teal-200 mt-2">Keterangan:<br>
+                            • <strong>d</strong> = Panjang garis singgung<br>
+                            • <strong>p</strong> = Jarak titik luar ke pusat lingkaran<br>
+                            • <strong>r</strong> = Jari-jari lingkaran</p>
+                        </div>
+                    </div>
+                `,
+                controls: [
+                    { id: 'r', label: 'Jari-jari (r)', min: 3, max: 12, value: 6, step: 1, unit: 'cm' },
+                    { id: 'p', label: 'Jarak Pusat ke Titik (p)', min: 7, max: 25, value: 10, step: 1, unit: 'cm' }
+                ],
+                calc: (vals) => {
+                    const r = vals.r;
+                    const p = Math.max(vals.p, r + 1);
+                    const d = Math.sqrt(p*p - r*r);
+                    return [
+                        `Panjang Garis Singgung (d) = <strong>${d.toFixed(2)} cm</strong>`,
+                        `Luas Segitiga OAP = <strong>${(0.5 * r * d).toFixed(2)} cm²</strong>`
+                    ];
+                },
+                examples: [
+                    {
+                        level: 1,
+                        title: 'Menghitung Panjang Garis Singgung',
+                        question: 'Sebuah lingkaran berpusat di O memiliki jari-jari r = 6 cm. Titik P berada di luar lingkaran dengan jarak OP = 10 cm. Hitunglah panjang garis singgung PA!',
+                        steps: [
+                            'Diketahui: r = 6 cm, p = 10 cm.',
+                            'Garis singgung tegak lurus dengan jari-jari, sehingga berlaku Teorema Pythagoras:',
+                            'PA = √(OP² - OA²)',
+                            'PA = √(10² - 6²)',
+                            'PA = √(100 - 36) = √64 = 8 cm.',
+                            'Jadi, panjang garis singgung PA adalah 8 cm.'
+                        ]
+                    },
+                    {
+                        level: 2,
+                        title: 'Menentukan Jari-jari & Luas Layang-Layang',
+                        question: 'Panjang garis singgung dari titik P ke lingkaran pusat O adalah 24 cm. Jika jarak OP = 25 cm, hitunglah jari-jari lingkaran dan luas layang-layang OAPB!',
+                        steps: [
+                            'Diketahui: d = 24 cm, p = 25 cm.',
+                            '1. Menghitung Jari-Jari (r): r = √(p² - d²) = √(25² - 24²) = √(625 - 576) = √49 = 7 cm.',
+                            '2. Luas ΔOAP = 1/2 × r × d = 1/2 × 7 × 24 = 84 cm².',
+                            '3. Luas Layang-Layang OAPB = 2 × Luas ΔOAP = 2 × 84 = 168 cm².'
+                        ]
+                    },
+                    {
+                        level: 3,
+                        title: 'HOTS: Panjang Tali Busur AB',
+                        question: 'Dari titik P di luar lingkaran berpusat di O dibuat dua garis singgung PA dan PB. Jari-jari r = 9 cm dan OP = 15 cm. Tentukan panjang tali busur AB yang menghubungkan kedua titik singgung!',
+                        steps: [
+                            '1. Cari panjang garis singgung PA: PA = √(15² - 9²) = √(225 - 81) = √144 = 12 cm.',
+                            '2. Luas ΔOAP = 1/2 × OA × AP = 1/2 × 9 × 12 = 54 cm².',
+                            '3. Garis OP tegak lurus membagi dua tali busur AB di titik T. Luas ΔOAP juga = 1/2 × OP × AT.',
+                            '4. Maka: 54 = 1/2 × 15 × AT  =>  AT = (54 × 2) / 15 = 7.2 cm.',
+                            '5. Panjang Tali Busur AB = 2 × AT = 2 × 7.2 = 14.4 cm.'
+                        ]
+                    }
+                ],
+                quizzes: {
+                    1: [
+                        { q: "Jika jari-jari lingkaran 5 cm dan jarak titik ke pusat 13 cm, berapakah panjang garis singgungnya?", options: ["10 cm", "12 cm", "14 cm", "15 cm"], ans: 1, exp: "d = √(13² - 5²) = √(169 - 25) = √144 = 12 cm." }
+                    ],
+                    2: [
+                        { q: "Panjang garis singgung dari titik P adalah 15 cm dan jari-jari lingkaran 8 cm. Berapa jarak titik P ke pusat?", options: ["17 cm", "20 cm", "23 cm", "25 cm"], ans: 0, exp: "p = √(15² + 8²) = √(225 + 64) = √289 = 17 cm." }
+                    ],
+                    3: [
+                        { q: "Titik P di luar lingkaran ber-jari-jari 10 cm. Jika panjang garis singgung PA = 24 cm, berapa luas layang-layang garis singgung OAPB?", options: ["120 cm²", "240 cm²", "480 cm²", "300 cm²"], ans: 1, exp: "Luas 1 segitiga = 1/2 × 10 × 24 = 120 cm². Luas layang-layang = 2 × 120 = 240 cm²." }
+                    ]
+                }
+            },
+            {
+                id: 'gspd',
+                title: 'Garis Singgung Persekutuan Dalam (GSPD)',
+                badge: 'GSPD (2D)',
+                summary: `
+                    <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-xl mb-4">
+                        <h4 class="font-bold text-amber-900 mb-1">Konsep GSPD</h4>
+                        <p class="text-sm text-amber-800">GSPD adalah garis singgung yang <strong>memotong segmen garis</strong> yang menghubungkan titik pusat kedua lingkaran. Posisi garis bersilangan di antara kedua lingkaran.</p>
+                    </div>
+                    <div class="bg-teal-900 text-white p-4 rounded-xl shadow-sm mb-4">
+                        <h4 class="font-bold text-teal-300 mb-2 text-sm border-b border-teal-700 pb-1">Rumus Utama GSPD:</h4>
+                        <div class="text-center py-2 text-xl font-mono font-bold text-amber-300">
+                            d = √(p² - (R + r)²)
+                        </div>
+                        <p class="text-xs text-teal-200 mt-2">Keterangan: <strong>d</strong> = GSPD | <strong>p</strong> = Jarak Pusat (P1-P2) | <strong>R</strong> = Jari-jari Besar | <strong>r</strong> = Jari-jari Kecil</p>
+                    </div>
+                `,
+                controls: [
+                    { id: 'R', label: 'Jari-jari R1 (R)', min: 4, max: 12, value: 7, step: 1, unit: 'cm' },
+                    { id: 'r', label: 'Jari-jari R2 (r)', min: 2, max: 8, value: 3, step: 1, unit: 'cm' },
+                    { id: 'p', label: 'Jarak Pusat (p)', min: 11, max: 30, value: 26, step: 1, unit: 'cm' }
+                ],
+                calc: (vals) => {
+                    const R = vals.R;
+                    const r = vals.r;
+                    const p = Math.max(vals.p, R + r + 1);
+                    const sumR = R + r;
+                    const d = Math.sqrt(p*p - sumR*sumR);
+                    return [
+                        `Jumlah Jari-Jari (R + r) = <strong>${sumR} cm</strong>`,
+                        `Panjang GSPD (d) = <strong>${d.toFixed(2)} cm</strong>`
+                    ];
+                },
+                examples: [
+                    {
+                        level: 1,
+                        title: 'Menghitung Panjang GSPD',
+                        question: 'Dua lingkaran memiliki jari-jari R = 7 cm dan r = 3 cm. Jarak antara kedua pusat lingkaran p = 26 cm. Hitunglah panjang garis singgung persekutuan dalam (d)!',
+                        steps: [
+                            'Diketahui: R = 7 cm, r = 3 cm, p = 26 cm.',
+                            'Rumus: d = √(p² - (R + r)²)',
+                            'd = √(26² - (7 + 3)²) = √(26² - 10²)',
+                            'd = √(676 - 100) = √576 = 24 cm.',
+                            'Jadi, panjang GSPD adalah 24 cm.'
+                        ]
+                    },
+                    {
+                        level: 2,
+                        title: 'Mencari Jari-jari Lingkaran Kedua',
+                        question: 'Panjang GSPD dua lingkaran adalah 12 cm dan jarak kedua pusatnya 13 cm. Jika jari-jari lingkaran besar R = 3 cm, tentukan jari-jari lingkaran kecil (r)!',
+                        steps: [
+                            'Diketahui: d = 12 cm, p = 13 cm, R = 3 cm.',
+                            '(R + r)² = p² - d²',
+                            '(3 + r)² = 13² - 12² = 169 - 144 = 25',
+                            '3 + r = √25 = 5  =>  r = 5 - 3 = 2 cm.',
+                            'Jadi, jari-jari lingkaran kecil adalah 2 cm.'
+                        ]
+                    },
+                    {
+                        level: 3,
+                        title: 'HOTS: Aplikasi Rantai Sepeda Silang',
+                        question: 'Dua roda berpusat dengan jarak 50 cm dihubungkan oleh rantai bersilang (konsep GSPD). Jari-jari roda besar 18 cm dan roda kecil 12 cm. Hitung panjang garis rantai bersilang d dan selisihnya jika dipasang tidak bersilang (GSPL)!',
+                        steps: [
+                            '1. GSPD (d): R+r = 18+12 = 30 cm. d = √(50² - 30²) = √(2500 - 900) = √1600 = 40 cm.',
+                            '2. GSPL (l): R-r = 18-12 = 6 cm. l = √(50² - 6²) = √(2500 - 36) = √2464 ≈ 49.64 cm.',
+                            '3. Selisih panjang garis rantai = 49.64 - 40 = 9.64 cm.'
+                        ]
+                    }
+                ],
+                quizzes: {
+                    1: [
+                        { q: "Dua lingkaran R=8 cm dan r=4 cm berjarak pusat 20 cm. Berapa panjang GSPD?", options: ["16 cm", "15 cm", "12 cm", "18 cm"], ans: 0, exp: "d = √(20² - (8+4)²) = √(400 - 144) = √256 = 16 cm." }
+                    ],
+                    2: [
+                        { q: "Panjang GSPD = 24 cm, R = 6 cm, r = 4 cm. Berapakah jarak pusat kedua lingkaran?", options: ["25 cm", "26 cm", "28 cm", "30 cm"], ans: 1, exp: "p = √(24² + (6+4)²) = √(576 + 100) = √676 = 26 cm." }
+                    ],
+                    3: [
+                        { q: "Jarak pusat dua lingkaran 15 cm. Panjang GSPD 12 cm. Jika R = 6 cm, berapakah r?", options: ["2 cm", "3 cm", "4 cm", "5 cm"], ans: 1, exp: "R+r = √(15² - 12²) = √81 = 9 cm. r = 9 - 6 = 3 cm." }
+                    ]
+                }
+            },
+            {
+                id: 'gspl',
+                title: 'Garis Singgung Persekutuan Luar (GSPL)',
+                badge: 'GSPL (2D)',
+                summary: `
+                    <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-xl mb-4">
+                        <h4 class="font-bold text-amber-900 mb-1">Konsep GSPL</h4>
+                        <p class="text-sm text-amber-800">GSPL adalah garis singgung yang <strong>tidak memotong</strong> segmen garis penghubung kedua titik pusat. Posisi garis sejajar berada di sisi luar kedua lingkaran.</p>
+                    </div>
+                    <div class="bg-teal-900 text-white p-4 rounded-xl shadow-sm mb-4">
+                        <h4 class="font-bold text-teal-300 mb-2 text-sm border-b border-teal-700 pb-1">Rumus Utama GSPL:</h4>
+                        <div class="text-center py-2 text-xl font-mono font-bold text-amber-300">
+                            l = √(p² - (R - r)²)
+                        </div>
+                        <p class="text-xs text-teal-200 mt-2">Keterangan: <strong>l</strong> = GSPL | <strong>p</strong> = Jarak Pusat | <strong>R</strong> = Jari-jari Besar | <strong>r</strong> = Jari-jari Kecil</p>
+                    </div>
+                `,
+                controls: [
+                    { id: 'R', label: 'Jari-jari Besar (R)', min: 5, max: 15, value: 14, step: 1, unit: 'cm' },
+                    { id: 'r', label: 'Jari-jari Kecil (r)', min: 1, max: 10, value: 2, step: 1, unit: 'cm' },
+                    { id: 'p', label: 'Jarak Pusat (p)', min: 13, max: 30, value: 20, step: 1, unit: 'cm' }
+                ],
+                calc: (vals) => {
+                    const R = vals.R;
+                    const r = Math.min(vals.r, R - 1);
+                    const p = Math.max(vals.p, R + r + 1);
+                    const diffR = R - r;
+                    const l = Math.sqrt(p*p - diffR*diffR);
+                    return [
+                        `Selisih Jari-Jari (R - r) = <strong>${diffR} cm</strong>`,
+                        `Panjang GSPL (l) = <strong>${l.toFixed(2)} cm</strong>`
+                    ];
+                },
+                examples: [
+                    {
+                        level: 1,
+                        title: 'Menghitung Panjang GSPL',
+                        question: 'Dua lingkaran memiliki jari-jari R = 14 cm dan r = 2 cm. Jarak kedua pusat p = 20 cm. Hitunglah panjang garis singgung persekutuan luar (l)!',
+                        steps: [
+                            'Diketahui: R = 14 cm, r = 2 cm, p = 20 cm.',
+                            'Selisih jari-jari: R - r = 14 - 2 = 12 cm.',
+                            'l = √(p² - (R - r)²) = √(20² - 12²)',
+                            'l = √(400 - 144) = √256 = 16 cm.'
+                        ]
+                    },
+                    {
+                        level: 2,
+                        title: 'Mencari Jarak Kedua Pusat',
+                        question: 'Panjang GSPL adalah 24 cm. Jari-jari lingkaran R = 15 cm dan r = 5 cm. Tentukan jarak antara titik pusat kedua lingkaran (p)!',
+                        steps: [
+                            'Diketahui: l = 24 cm, R = 15 cm, r = 5 cm.',
+                            'R - r = 15 - 5 = 10 cm.',
+                            'p = √(l² + (R - r)²) = √(24² + 10²)',
+                            'p = √(576 + 100) = √676 = 26 cm.'
+                        ]
+                    },
+                    {
+                        level: 3,
+                        title: 'HOTS: Panjang Tali Pengikat Tabung Gas',
+                        question: 'Dua tabung gas LPG dengan jari-jari sama r = 14 cm diletakkan berdampingan dan diikat rapat oleh sebuah tali keliling. Tentukan panjang tali minimal yang dibutuhkan!',
+                        steps: [
+                            '1. Dua tabung kongruen bersinggungan: p = R + r = 14 + 14 = 28 cm.',
+                            '2. Panjang bagian tali lurus = 2 × GSPL. Karena R=r, GSPL = p = 28 cm. Jadi 2 lurus = 2 × 28 = 56 cm.',
+                            '3. Panjang bagian tali melengkung = 2 setengah keliling lingkaran = 1 keliling lingkaran penuh = 2 × π × r = 2 × (22/7) × 14 = 88 cm.',
+                            '4. Total Panjang Tali = 56 + 88 = 144 cm.'
+                        ]
+                    }
+                ],
+                quizzes: {
+                    1: [
+                        { q: "R = 13 cm, r = 3 cm, p = 26 cm. Hitunglah GSPL!", options: ["24 cm", "22 cm", "20 cm", "25 cm"], ans: 0, exp: "l = √(26² - (13-3)²) = √(676 - 100) = √576 = 24 cm." }
+                    ],
+                    2: [
+                        { q: "GSPL = 15 cm, p = 17 cm, r = 3 cm. Berapakah R?", options: ["11 cm", "10 cm", "12 cm", "9 cm"], ans: 0, exp: "R-r = √(17² - 15²) = √64 = 8 cm. R = 8 + 3 = 11 cm." }
+                    ],
+                    3: [
+                        { q: "Dua lingkaran bersinggungan di luar dengan R = 9 cm dan r = 4 cm. Berapakah panjang GSPL-nya?", options: ["12 cm", "10 cm", "14 cm", "15 cm"], ans: 0, exp: "Karena bersinggungan luar, p = R + r = 13 cm. l = √(13² - (9-4)²) = √(169 - 25) = √144 = 12 cm." }
+                    ]
+                }
+            },
+            {
+                id: 'tabung',
+                title: 'Bangun Ruang Sisi Lengkung: Tabung',
+                badge: 'BRSL 3D',
+                summary: `
+                    <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-xl mb-4">
+                        <h4 class="font-bold text-amber-900 mb-1">Konsep Tabung</h4>
+                        <p class="text-sm text-amber-800">Tabung adalah bangun ruang 3D yang dibatasi oleh dua lingkaran sejajar & kongruen (alas & tutup) serta satu selimut melengkung berbentuk persegi panjang.</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-teal-900 text-white p-4 rounded-xl shadow-sm">
+                            <h4 class="font-bold text-teal-300 mb-2 text-sm border-b border-teal-700 pb-1">Rumus Volume:</h4>
+                            <div class="text-center py-2 text-xl font-mono font-bold text-amber-300">
+                                V = π × r² × t
+                            </div>
+                        </div>
+                        <div class="bg-teal-900 text-white p-4 rounded-xl shadow-sm">
+                            <h4 class="font-bold text-teal-300 mb-2 text-sm border-b border-teal-700 pb-1">Luas Permukaan:</h4>
+                            <div class="text-center py-2 text-xl font-mono font-bold text-amber-300">
+                                LP = 2 × π × r × (r + t)
+                            </div>
+                        </div>
+                    </div>
+                `,
+                controls: [
+                    { id: 'r', label: 'Jari-Jari Alas (r)', min: 2, max: 14, value: 7, step: 1, unit: 'cm' },
+                    { id: 't', label: 'Tinggi Tabung (t)', min: 3, max: 20, value: 10, step: 1, unit: 'cm' }
+                ],
+                calc: (vals) => {
+                    const r = vals.r;
+                    const t = vals.t;
+                    const vol = Math.PI * r * r * t;
+                    const lp = 2 * Math.PI * r * (r + t);
+                    const ls = 2 * Math.PI * r * t;
+                    return [
+                        `Luas Selimut = <strong>${ls.toFixed(2)} cm²</strong>`,
+                        `Luas Permukaan (LP) = <strong>${lp.toFixed(2)} cm²</strong>`,
+                        `Volume Tabung (V) = <strong>${vol.toFixed(2)} cm³</strong>`
+                    ];
+                },
+                examples: [
+                    {
+                        level: 1,
+                        title: 'Menghitung Volume dan Luas Permukaan Tabung',
+                        question: 'Sebuah tabung memiliki jari-jari alas r = 7 cm dan tinggi t = 10 cm (π = 22/7). Hitung Volume dan Luas Permukaannya!',
+                        steps: [
+                            '1. Volume = π × r² × t = (22/7) × 7² × 10 = (22/7) × 49 × 10 = 1540 cm³.',
+                            '2. Luas Permukaan = 2 × π × r × (r + t) = 2 × (22/7) × 7 × (7 + 10) = 44 × 17 = 748 cm².'
+                        ]
+                    },
+                    {
+                        level: 2,
+                        title: 'Mencari Jari-Jari dari Volume',
+                        question: 'Sebuah drum tabung terisi penuh air dengan Volume V = 3140 liter (3.14 m³). Jika tinggi drum t = 1 m dan π = 3.14, berapakah jari-jari alas drum tersebut?',
+                        steps: [
+                            'Rumus Volume: V = π × r² × t',
+                            '3.14 = 3.14 × r² × 1',
+                            'r² = 3.14 / 3.14 = 1',
+                            'r = √1 = 1 meter (atau 100 cm).'
+                        ]
+                    },
+                    {
+                        level: 3,
+                        title: 'HOTS: Biaya Pengecatan Tangki',
+                        question: 'Tangki minyak berbentuk tabung tanpa tutup dengan jari-jari 3.5 m dan tinggi 6 m akan dicat bagian luar selimut dan alasnya. Jika 1 kaleng cat menutup 20 m², berapa kaleng cat minimal yang dibeli?',
+                        steps: [
+                            '1. Luas tanpa tutup = Luas Alas + Luas Selimut = π r² + 2 π r t',
+                            '2. Luas Alas = (22/7) × 3.5² = 38.5 m².',
+                            '3. Luas Selimut = 2 × (22/7) × 3.5 × 6 = 132 m².',
+                            '4. Total Luas Dicat = 38.5 + 132 = 170.5 m².',
+                            '5. Jumlah kaleng = 170.5 / 20 = 8.525 => Dibulatkan ke atas jadi 9 kaleng cat.'
+                        ]
+                    }
+                ],
+                quizzes: {
+                    1: [
+                        { q: "Tabung dengan r = 10 cm dan t = 14 cm. Berapakah volume tabung? (π = 3.14)", options: ["4396 cm³", "4400 cm³", "3140 cm³", "1400 cm³"], ans: 0, exp: "V = 3.14 × 100 × 14 = 4396 cm³." }
+                    ],
+                    2: [
+                        { q: "Luas selimut tabung adalah 440 cm² dengan tinggi 10 cm. Berapakah jari-jari alasnya? (π = 22/7)", options: ["7 cm", "14 cm", "3.5 cm", "5 cm"], ans: 0, exp: "2 × (22/7) × r × 10 = 440 => (440/7) × r = 440 => r = 7 cm." }
+                    ],
+                    3: [
+                        { q: "Dua tabung memilki tinggi sama. Jari-jari tabung A dua kali jari-jari tabung B. Berapakah perbandingan volume tabung A dan B?", options: ["4 : 1", "2 : 1", "1 : 4", "8 : 1"], ans: 0, exp: "Perbandingan Volume = (rA / rB)² = (2 / 1)² = 4 : 1." }
+                    ]
+                }
+            },
+            {
+                id: 'kerucut',
+                title: 'Bangun Ruang Sisi Lengkung: Kerucut',
+                badge: 'BRSL 3D',
+                summary: `
+                    <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-xl mb-4">
+                        <h4 class="font-bold text-amber-900 mb-1">Konsep Kerucut</h4>
+                        <p class="text-sm text-amber-800">Kerucut adalah bangun ruang limas istimewa dengan alas berbentuk lingkaran dan selimut melengkung yang menguncup pada satu titik puncak. Garis pelukis ($s$) dihitung dengan Pythagoras $s = \sqrt{r^2 + t^2}$.</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-teal-900 text-white p-4 rounded-xl shadow-sm">
+                            <h4 class="font-bold text-teal-300 mb-2 text-sm border-b border-teal-700 pb-1">Rumus Volume:</h4>
+                            <div class="text-center py-2 text-xl font-mono font-bold text-amber-300">
+                                V = (1/3) × π × r² × t
+                            </div>
+                        </div>
+                        <div class="bg-teal-900 text-white p-4 rounded-xl shadow-sm">
+                            <h4 class="font-bold text-teal-300 mb-2 text-sm border-b border-teal-700 pb-1">Luas Permukaan:</h4>
+                            <div class="text-center py-2 text-xl font-mono font-bold text-amber-300">
+                                LP = π × r × (r + s)
+                            </div>
+                        </div>
+                    </div>
+                `,
+                controls: [
+                    { id: 'r', label: 'Jari-Jari (r)', min: 3, max: 15, value: 6, step: 1, unit: 'cm' },
+                    { id: 't', label: 'Tinggi Kerucut (t)', min: 4, max: 20, value: 8, step: 1, unit: 'cm' }
+                ],
+                calc: (vals) => {
+                    const r = vals.r;
+                    const t = vals.t;
+                    const s = Math.sqrt(r*r + t*t);
+                    const vol = (1/3) * Math.PI * r * r * t;
+                    const lp = Math.PI * r * (r + s);
+                    return [
+                        `Garis Pelukis (s) = <strong>${s.toFixed(2)} cm</strong>`,
+                        `Luas Permukaan (LP) = <strong>${lp.toFixed(2)} cm²</strong>`,
+                        `Volume Kerucut (V) = <strong>${vol.toFixed(2)} cm³</strong>`
+                    ];
+                },
+                examples: [
+                    {
+                        level: 1,
+                        title: 'Menghitung Garis Pelukis dan Volume',
+                        question: 'Sebuah kerucut dengan r = 6 cm dan tinggi t = 8 cm (π = 3.14). Hitunglah garis pelukis (s) dan volume kerucut!',
+                        steps: [
+                            '1. s = √(r² + t²) = √(6² + 8²) = √(36 + 64) = √100 = 10 cm.',
+                            '2. Volume = (1/3) × π × r² × t = (1/3) × 3.14 × 36 × 8 = 301.44 cm³.'
+                        ]
+                    },
+                    {
+                        level: 2,
+                        title: 'Mencari Tinggi dari Luas Selimut',
+                        question: 'Luas selimut kerucut adalah 550 cm² dengan jari-jari alas r = 7 cm (π = 22/7). Hitung tinggi kerucut (t)!',
+                        steps: [
+                            '1. Luas Selimut = π × r × s  =>  550 = (22/7) × 7 × s  =>  550 = 22 × s  =>  s = 25 cm.',
+                            '2. Tinggi t = √(s² - r²) = √(25² - 7²) = √(625 - 49) = √576 = 24 cm.'
+                        ]
+                    },
+                    {
+                        level: 3,
+                        title: 'HOTS: Tumpeng Terpancung (Frustum)',
+                        question: 'Sebuah tumpeng kerucut dipotong horizontal tepat pada 1/2 tingginya. Berapakah perbandingan volume bagian atas (potongan kecil) dengan bagian bawah (kerucut terpancung)?',
+                        steps: [
+                            '1. Rasio skala tinggi kerucut kecil : kerucut utuh = 1 : 2.',
+                            '2. Perbandingan volume sebanding dengan pangkat tiga skala: V_kecil : V_utuh = (1)³ : (2)³ = 1 : 8.',
+                            '3. Volume bagian bawah = V_utuh - V_kecil = 8 - 1 = 7 bagian.',
+                            '4. Jadi perbandingan potongan atas : potongan bawah = 1 : 7.'
+                        ]
+                    }
+                ],
+                quizzes: {
+                    1: [
+                        { q: "Kerucut dengan r = 7 cm dan s = 25 cm. Berapa luas selimutnya? (π = 22/7)", options: ["550 cm²", "350 cm²", "700 cm²", "450 cm²"], ans: 0, exp: "LS = (22/7) × 7 × 25 = 550 cm²." }
+                    ],
+                    2: [
+                        { q: "Jari-jari kerucut 9 cm dan tinggi 12 cm. Berapakah garis pelukis s?", options: ["15 cm", "13 cm", "14 cm", "16 cm"], ans: 0, exp: "s = √(9² + 12²) = √(81 + 144) = √225 = 15 cm." }
+                    ],
+                    3: [
+                        { q: "Jika tinggi kerucut dijadikan 2 kali lipat dan jari-jarinya tetap, volume kerucut menjadi berapa kali semula?", options: ["2 kali", "4 kali", "8 kali", "6 kali"], ans: 0, exp: "Volume berbanding lurus dengan tinggi t. Jika t menjadi 2t, maka V menjadi 2 kali." }
+                    ]
+                }
+            },
+            {
+                id: 'bola',
+                title: 'Bangun Ruang Sisi Lengkung: Bola',
+                badge: 'BRSL 3D',
+                summary: `
+                    <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-xl mb-4">
+                        <h4 class="font-bold text-amber-900 mb-1">Konsep Bola</h4>
+                        <p class="text-sm text-amber-800">Bola adalah bangun ruang 3D simetris sempurna yang dibatasi oleh satu bidang lengkung di mana setiap titik pada permukaannya berjarak sama ($r$) dari titik pusat.</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-teal-900 text-white p-4 rounded-xl shadow-sm">
+                            <h4 class="font-bold text-teal-300 mb-2 text-sm border-b border-teal-700 pb-1">Rumus Volume:</h4>
+                            <div class="text-center py-2 text-xl font-mono font-bold text-amber-300">
+                                V = (4/3) × π × r³
+                            </div>
+                        </div>
+                        <div class="bg-teal-900 text-white p-4 rounded-xl shadow-sm">
+                            <h4 class="font-bold text-teal-300 mb-2 text-sm border-b border-teal-700 pb-1">Luas Permukaan:</h4>
+                            <div class="text-center py-2 text-xl font-mono font-bold text-amber-300">
+                                LP = 4 × π × r²
+                            </div>
+                        </div>
+                    </div>
+                `,
+                controls: [
+                    { id: 'r', label: 'Jari-Jari Bola (r)', min: 2, max: 21, value: 7, step: 1, unit: 'cm' }
+                ],
+                calc: (vals) => {
+                    const r = vals.r;
+                    const vol = (4/3) * Math.PI * Math.pow(r, 3);
+                    const lp = 4 * Math.PI * r * r;
+                    const lpSetengahPadat = 3 * Math.PI * r * r;
+                    return [
+                        `Luas Permukaan Bola = <strong>${lp.toFixed(2)} cm²</strong>`,
+                        `Luas Belahan Bola Padat = <strong>${lpSetengahPadat.toFixed(2)} cm²</strong>`,
+                        `Volume Bola (V) = <strong>${vol.toFixed(2)} cm³</strong>`
+                    ];
+                },
+                examples: [
+                    {
+                        level: 1,
+                        title: 'Menghitung Luas Permukaan Bola',
+                        question: 'Sebuah bola memiliki jari-jari r = 21 cm (π = 22/7). Hitunglah Luas Permukaan Bola tersebut!',
+                        steps: [
+                            'Rumus Luas Permukaan: LP = 4 × π × r²',
+                            'LP = 4 × (22/7) × 21 × 21',
+                            'LP = 4 × 22 × 3 × 21 = 5544 cm².'
+                        ]
+                    },
+                    {
+                        level: 2,
+                        title: 'Menghitung Jari-Jari dari Volume',
+                        question: 'Volume sebuah bola adalah 36π cm³. Berapakah luas permukaan bola tersebut?',
+                        steps: [
+                            '1. V = (4/3) × π × r³  =>  36π = (4/3) × π × r³',
+                            '2. 36 = (4/3) × r³  =>  r³ = (36 × 3) / 4 = 27  =>  r = ∛27 = 3 cm.',
+                            '3. Luas Permukaan LP = 4 × π × r² = 4 × π × 3² = 36π cm² (atau 113.04 cm²).'
+                        ]
+                    },
+                    {
+                        level: 3,
+                        title: 'HOTS: Kubus Presisi di Dalam Bola',
+                        question: 'Sebuah kubus dengan panjang rusuk s = 10√3 cm dimasukkan tepat di dalam bola sehingga ke-8 titik sudutnya menyentuh bola. Berapa volume ruang bola di luar kubus?',
+                        steps: [
+                            '1. Diagonal ruang kubus = s √3 = (10√3) × √3 = 30 cm.',
+                            '2. Diagonal ruang kubus sama dengan Diameter Bola (2r = 30 cm) => r_bola = 15 cm.',
+                            '3. Volume Bola = (4/3) × π × 15³ = (4/3) × 3.14 × 3375 = 14,130 cm³.',
+                            '4. Volume Kubus = s³ = (10√3)³ = 3000 √3 ≈ 3000 × 1.732 = 5,196 cm³.',
+                            '5. Sisa Volume = 14,130 - 5,196 = 8,934 cm³.'
+                        ]
+                    }
+                ],
+                quizzes: {
+                    1: [
+                        { q: "Jari-jari bola 7 cm (π = 22/7). Hitung luas permukaannya!", options: ["616 cm²", "154 cm²", "308 cm²", "1232 cm²"], ans: 0, exp: "LP = 4 × (22/7) × 49 = 616 cm²." }
+                    ],
+                    2: [
+                        { q: "Luas belahan bola padat (setengah bola padat) ber-jari-jari 10 cm (π = 3.14) adalah...", options: ["942 cm²", "628 cm²", "1256 cm²", "314 cm²"], ans: 0, exp: "LP setengah bola padat = 3 × π × r² = 3 × 3.14 × 100 = 942 cm²." }
+                    ],
+                    3: [
+                        { q: "Dua bola memiliki perbandingan jari-jari 1 : 3. Berapakah perbandingan volume kedua bola tersebut?", options: ["1 : 27", "1 : 9", "1 : 3", "1 : 81"], ans: 0, exp: "Perbandingan Volume = (r1 / r2)³ = (1 / 3)³ = 1 : 27." }
+                    ]
+                }
+            }
+        ];
+
+        // STATE APLIKASI
+        let currentTopicIdx = 0;
+        let currentTab = 'materi';
+        let currentSliderVals = {};
+        let activeQuizLvl = 1;
+
+        // Three.js 3D Variables
+        let scene, camera, renderer, currentMesh, controls;
+
+        // INITIALIZATION
+        window.addEventListener('DOMContentLoaded', () => {
+            renderTopicMenu();
+            loadTopic(0);
+            lucide.createIcons();
+        });
+
+        // RENDER TOPIC SIDEBAR MENU
+        function renderTopicMenu() {
+            const menu = document.getElementById('topic-menu');
+            menu.innerHTML = topicsData.map((t, idx) => `
+                <button onclick="loadTopic(${idx})" class="w-full text-left px-3 py-2.5 rounded-xl text-sm transition-all flex items-center justify-between ${idx === currentTopicIdx ? 'sidebar-active shadow-md' : 'text-slate-600 hover:bg-slate-100'}">
+                    <span class="font-semibold">${t.title}</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 opacity-70"></i>
+                </button>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        // LOAD TOPIC DATA
+        function loadTopic(idx) {
+            currentTopicIdx = idx;
+            renderTopicMenu();
+
+            const t = topicsData[idx];
+            document.getElementById('topic-title').innerText = t.title;
+            document.getElementById('topic-badge').innerText = t.badge;
+            document.getElementById('content-materi').innerHTML = t.summary;
+
+            // Initialize controls
+            currentSliderVals = {};
+            t.controls.forEach(c => currentSliderVals[c.id] = c.value);
+
+            renderControls();
+            renderExamples('all');
+            loadQuizLevel(1);
+            switchTab(currentTab);
+        }
+
+        // TAB SWITCHING LOGIC
+        function switchTab(tab) {
+            currentTab = tab;
+            ['materi', 'visual', 'contoh', 'kuis'].forEach(t => {
+                document.getElementById(`content-${t}`).classList.add('hidden');
+                document.getElementById(`tab-${t}`).classList.remove('tab-active');
+            });
+
+            document.getElementById(`content-${tab}`).classList.remove('hidden');
+            document.getElementById(`tab-${tab}`).classList.add('tab-active');
+
+            if (tab === 'visual') {
+                setTimeout(() => updateVisualizer(), 50);
+            }
+        }
+
+        // RENDER CONTROLS FOR VISUALIZER
+        function renderControls() {
+            const t = topicsData[currentTopicIdx];
+            const container = document.getElementById('slider-controls');
+            container.innerHTML = t.controls.map(c => `
+                <div>
+                    <div class="flex justify-between text-xs font-bold text-slate-700 mb-1">
+                        <span>${c.label}</span>
+                        <span id="val-${c.id}" class="text-teal-600 font-mono">${c.value} ${c.unit}</span>
+                    </div>
+                    <input type="range" min="${c.min}" max="${c.max}" value="${c.value}" step="${c.step}"
+                        oninput="onSliderChange('${c.id}', this.value, '${c.unit}')"
+                        class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-teal-600">
+                </div>
+            `).join('');
+
+            updateCalculations();
+        }
+
+        function onSliderChange(id, val, unit) {
+            currentSliderVals[id] = parseFloat(val);
+            document.getElementById(`val-${id}`).innerText = `${val} ${unit}`;
+            updateCalculations();
+            updateVisualizer();
+        }
+
+        function updateCalculations() {
+            const t = topicsData[currentTopicIdx];
+            const res = t.calc(currentSliderVals);
+            document.getElementById('live-calc-results').innerHTML = res.map(r => `<p>• ${r}</p>`).join('');
+        }
+
+        // VISUALIZER ROUTER (2D / 3D)
+        function updateVisualizer() {
+            const topic = topicsData[currentTopicIdx];
+            const container = document.getElementById('canvas-container');
+
+            if (['gsl', 'gspd', 'gspl'].includes(topic.id)) {
+                // Render 2D Canvas Graphics
+                container.innerHTML = `<canvas id="vizCanvas" width="500" height="320" class="max-w-full bg-slate-950 rounded-xl shadow-inner"></canvas>`;
+                document.getElementById('viz-hint').innerText = "Visualisasi 2D interaktif & presisi";
+                draw2D(topic.id);
+            } else {
+                // Render 3D Three.js Shape
+                container.innerHTML = `<div id="threejs-holder" class="w-full h-[320px] rounded-xl overflow-hidden"></div>`;
+                document.getElementById('viz-hint').innerText = "Geser untuk merotasi / Zoom model 3D";
+                draw3D(topic.id);
+            }
+        }
+
+        // 2D CANVAS DRAWING FUNCTIONS
+        function draw2D(type) {
+            const canvas = document.getElementById('vizCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            ctx.lineWidth = 2;
+            const cx = 150, cy = 160;
+
+            if (type === 'gsl') {
+                const r = currentSliderVals.r * 8;
+                const p = currentSliderVals.p * 14;
+                const px = cx + p, py = cy;
+                const d = Math.sqrt(p*p - r*r);
+                const angle = Math.asin(r / p);
+
+                // Circle
+                ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2); ctx.strokeStyle = '#38bdf8'; ctx.stroke();
+                // Center point
+                ctx.fillStyle = '#fbbf24'; ctx.beginPath(); ctx.arc(cx, cy, 4, 0, Math.PI*2); ctx.fill();
+                ctx.fillText("O", cx - 12, cy + 4);
+                // Outer point P
+                ctx.beginPath(); ctx.arc(px, py, 4, 0, Math.PI*2); ctx.fill();
+                ctx.fillText("P", px + 8, py + 4);
+                // Line OP (p)
+                ctx.strokeStyle = '#94a3b8'; ctx.setLineDash([4,4]);
+                ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(px, py); ctx.stroke(); ctx.setLineDash([]);
+                // Tangent point A
+                const ax = cx + r * Math.sin(angle);
+                const ay = cy - r * Math.cos(angle);
+                ctx.fillStyle = '#f43f5e'; ctx.beginPath(); ctx.arc(ax, ay, 4, 0, Math.PI*2); ctx.fill();
+                ctx.fillText("A", ax - 5, ay - 10);
+                // Tangent Line PA
+                ctx.strokeStyle = '#34d399'; ctx.lineWidth = 3;
+                ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(ax, ay); ctx.stroke();
+                // Radius OA
+                ctx.strokeStyle = '#f43f5e'; ctx.lineWidth = 2;
+                ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(ax, ay); ctx.stroke();
+
+            } else if (type === 'gspd' || type === 'gspl') {
+                const R = currentSliderVals.R * 6;
+                const r = currentSliderVals.r * 6;
+                const p = currentSliderVals.p * 9;
+                const c2x = cx + p, c2y = cy;
+
+                // Circle 1
+                ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI*2); ctx.strokeStyle = '#38bdf8'; ctx.stroke();
+                ctx.fillStyle = '#fbbf24'; ctx.beginPath(); ctx.arc(cx, cy, 3, 0, Math.PI*2); ctx.fill();
+                // Circle 2
+                ctx.beginPath(); ctx.arc(c2x, c2y, r, 0, Math.PI*2); ctx.strokeStyle = '#a78bfa'; ctx.stroke();
+                ctx.fillStyle = '#fbbf24'; ctx.beginPath(); ctx.arc(c2x, c2y, 3, 0, Math.PI*2); ctx.fill();
+                // Line P1-P2 (p)
+                ctx.strokeStyle = '#64748b'; ctx.setLineDash([4,4]);
+                ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(c2x, c2y); ctx.stroke(); ctx.setLineDash([]);
+
+                ctx.strokeStyle = '#34d399'; ctx.lineWidth = 3;
+                if (type === 'gspd') {
+                    // Inner Tangent Line
+                    const k = (R + r) / p;
+                    if (k <= 1) {
+                        const ang = Math.asin(k);
+                        const t1x = cx + R * Math.sin(ang);
+                        const t1y = cy - R * Math.cos(ang);
+                        const t2x = c2x - r * Math.sin(ang);
+                        const t2y = c2y + r * Math.cos(ang);
+                        ctx.beginPath(); ctx.moveTo(t1x, t1y); ctx.lineTo(t2x, t2y); ctx.stroke();
+                    }
+                } else {
+                    // Outer Tangent Line
+                    const diff = R - r;
+                    const k = diff / p;
+                    if (k <= 1) {
+                        const ang = Math.asin(k);
+                        const t1x = cx + R * Math.sin(ang);
+                        const t1y = cy - R * Math.cos(ang);
+                        const t2x = c2x + r * Math.sin(ang);
+                        const t2y = c2y - r * Math.cos(ang);
+                        ctx.beginPath(); ctx.moveTo(t1x, t1y); ctx.lineTo(t2x, t2y); ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        // 3D THREE.JS DRAWING FUNCTIONS
+        function draw3D(type) {
+            const holder = document.getElementById('threejs-holder');
+            if (!holder) return;
+
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(45, holder.clientWidth / holder.clientHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(holder.clientWidth, holder.clientHeight);
+            holder.appendChild(renderer.domElement);
+
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+            scene.add(ambientLight);
+            const dirLight = new THREE.DirectionalLight(0x0d9488, 0.8);
+            dirLight.position.set(5, 10, 7);
+            scene.add(dirLight);
+
+            // Mesh Generation
+            const material = new THREE.MeshPhongMaterial({
+                color: 0x14b8a6,
+                shininess: 80,
+                wireframe: false,
+                transparent: true,
+                opacity: 0.85
+            });
+
+            let geometry;
+            const r = currentSliderVals.r * 0.3;
+            const t = (currentSliderVals.t || 10) * 0.3;
+
+            if (type === 'tabung') {
+                geometry = new THREE.CylinderGeometry(r, r, t, 32);
+            } else if (type === 'kerucut') {
+                geometry = new THREE.ConeGeometry(r, t, 32);
+            } else if (type === 'bola') {
+                geometry = new THREE.SphereGeometry(r, 32, 32);
+            }
+
+            currentMesh = new THREE.Mesh(geometry, material);
+            scene.add(currentMesh);
+
+            // Wireframe Overlay
+            const wireGeo = new THREE.WireframeGeometry(geometry);
+            const wireMat = new THREE.LineBasicMaterial({ color: 0xffffff, opacity: 0.3, transparent: true });
+            const wireframe = new THREE.LineSegments(wireGeo, wireMat);
+            currentMesh.add(wireframe);
+
+            camera.position.set(0, 5, 12);
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+
+            function animate() {
+                requestAnimationFrame(animate);
+                if (currentMesh) currentMesh.rotation.y += 0.005;
+                controls.update();
+                renderer.render(scene, camera);
+            }
+            animate();
+        }
+
+        // EXAMPLES FILTER & RENDER
+        function renderExamples(lvlFilter) {
+            const topic = topicsData[currentTopicIdx];
+            const container = document.getElementById('examples-list');
+
+            let filtered = topic.examples;
+            if (lvlFilter !== 'all') {
+                filtered = topic.examples.filter(e => e.level === lvlFilter);
+            }
+
+            container.innerHTML = filtered.map(e => `
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="px-2.5 py-1 text-xs font-bold rounded-md ${
+                            e.level === 1 ? 'bg-emerald-100 text-emerald-800' :
+                            e.level === 2 ? 'bg-amber-100 text-amber-800' : 'bg-rose-100 text-rose-800'
+                        }">Level ${e.level} • ${e.level === 1 ? 'Dasar' : e.level === 2 ? 'Sedang' : 'HOTS / Tantangan'}</span>
+                        <h4 class="font-bold text-slate-900 text-sm">${e.title}</h4>
+                    </div>
+                    <p class="text-sm font-semibold text-slate-800 mb-3">${e.question}</p>
+                    <details class="group bg-slate-50 p-3 rounded-xl border border-slate-200">
+                        <summary class="cursor-pointer text-xs font-bold text-teal-700 flex items-center justify-between">
+                            <span>Lihat Langkah Pembahasan</span>
+                            <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
+                        </summary>
+                        <div class="mt-3 space-y-1.5 text-xs text-slate-600 font-mono border-t pt-2 border-slate-200">
+                            ${e.steps.map(s => `<p>${s}</p>`).join('')}
+                        </div>
+                    </details>
+                </div>
+            `).join('');
+
+            lucide.createIcons();
+        }
+
+        function filterExamples(lvl) {
+            document.querySelectorAll('.ex-filter-btn').forEach(b => {
+                b.classList.remove('bg-teal-600', 'text-white');
+                b.classList.add('bg-slate-100', 'text-slate-600');
+            });
+            event.target.classList.add('bg-teal-600', 'text-white');
+            renderExamples(lvl);
+        }
+
+        // QUIZ SYSTEM LOGIC
+        function loadQuizLevel(lvl) {
+            activeQuizLvl = lvl;
+            [1,2,3].forEach(l => {
+                const btn = document.getElementById(`quiz-lvl-${l}`);
+                btn.className = `quiz-lvl-btn px-3 py-1.5 text-xs font-bold rounded-lg ${l === lvl ? 'bg-teal-600 text-white' : 'bg-slate-200 text-slate-700'}`;
+            });
+
+            const topic = topicsData[currentTopicIdx];
+            const questions = topic.quizzes[lvl] || [];
+            const container = document.getElementById('quiz-container');
+
+            if (questions.length === 0) {
+                container.innerHTML = `<p class="text-center text-sm text-slate-500 py-8">Soal kuis untuk level ini sedang disiapkan.</p>`;
+                return;
+            }
+
+            container.innerHTML = questions.map((q, qIdx) => `
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm" id="q-card-${qIdx}">
+                    <p class="text-sm font-bold text-slate-900 mb-4">Soal ${qIdx + 1}: ${q.q}</p>
+                    <div class="space-y-2 mb-4">
+                        ${q.options.map((opt, oIdx) => `
+                            <label class="flex items-center p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm">
+                                <input type="radio" name="q_${qIdx}" value="${oIdx}" class="accent-teal-600 w-4 h-4 mr-3">
+                                <span>${opt}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                    <button onclick="checkAnswer(${qIdx}, ${q.ans})" class="px-4 py-2 bg-slate-900 hover:bg-teal-600 text-white text-xs font-bold rounded-xl transition">
+                        Periksa Jawaban
+                    </button>
+                    <div id="q-feedback-${qIdx}" class="hidden mt-4 p-3 rounded-xl text-xs font-semibold"></div>
+                </div>
+            `).join('');
+        }
+
+        function checkAnswer(qIdx, correctIdx) {
+            const selected = document.querySelector(`input[name="q_${qIdx}"]:checked`);
+            const feedback = document.getElementById(`q-feedback-${qIdx}`);
+            const topic = topicsData[currentTopicIdx];
+            const qData = topic.quizzes[activeQuizLvl][qIdx];
+
+            feedback.classList.remove('hidden', 'bg-emerald-100', 'text-emerald-900', 'bg-rose-100', 'text-rose-900');
+
+            if (!selected) {
+                feedback.classList.add('bg-rose-100', 'text-rose-900');
+                feedback.innerText = "Silakan pilih salah satu jawaban terlebih dahulu!";
+                return;
+            }
+
+            if (parseInt(selected.value) === correctIdx) {
+                feedback.classList.add('bg-emerald-100', 'text-emerald-900');
+                feedback.innerHTML = `✅ <strong>Jawaban Benar!</strong><br><span class="font-mono mt-1 block">${qData.exp}</span>`;
+            } else {
+                feedback.classList.add('bg-rose-100', 'text-rose-900');
+                feedback.innerHTML = `❌ <strong>Jawaban Kurang Tepat.</strong><br><span class="font-mono mt-1 block">Pembahasan: ${qData.exp}</span>`;
+            }
+        }
+    </script>
+</body>
+</html>
